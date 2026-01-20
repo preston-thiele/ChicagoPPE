@@ -67,7 +67,7 @@ function App() {
           <div className="hero-content">
             <h1>Where <em>Ideas</em> Meet Over Coffee</h1>
             <p className="hero-description">
-              Join Chicago's community of curious minds exploring the intersections of philosophy, politics, and economics. No expertise required—just bring your questions.
+              Join Chicago's community of curious minds exploring the intersections of philosophy, politics, and economics. No expertise required—just bring your curiosity.
             </p>
             <div className="hero-cta">
               <button className="btn btn-primary" onClick={() => scrollTo('join')}>
