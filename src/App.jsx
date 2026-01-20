@@ -113,7 +113,7 @@ function App() {
           <div className="schedule-content">
             <div className="schedule-info">
               <h2>When & Where</h2>
-              <p>We gather weekly in a welcoming coffee shop atmosphere for structured yet informal discussions. Each session focuses on a specific topic, with readings shared beforehand for those who want to dive deeper.</p>
+              <p>We gather weekly for structured yet informal discussions. Each session focuses on a specific topic, with readings shared beforehand for those who want to dive deeper.</p>
               <div className="schedule-details">
                 <div className="detail-item">
                   <div className="detail-icon">I</div>
