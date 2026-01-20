@@ -1,6 +1,7 @@
 import { put, list } from "@vercel/blob";
 
 const WAITLIST_FILENAME = 'waitlist.json';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'chicagoppe2026';
 
 async function getWaitlist() {
   try {
@@ -28,12 +29,13 @@ async function saveWaitlist(data) {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
+  // POST - Add new signup (public)
   if (req.method === 'POST') {
     try {
       const { firstName, lastName, email, interest, background } = req.body;
@@ -66,7 +68,14 @@ export default async function handler(req, res) {
     }
   }
 
+  // GET - Retrieve all signups (password protected)
   if (req.method === 'GET') {
+    const password = req.query.password || req.headers.authorization?.replace('Bearer ', '');
+    
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     try {
       const waitlist = await getWaitlist();
       return res.status(200).json({ signups: waitlist, count: waitlist.length });
