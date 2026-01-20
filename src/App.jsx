@@ -65,7 +65,6 @@ function App() {
       <section className="hero">
         <div className="container">
           <div className="hero-content">
-            <div className="hero-badge">Weekly Discussions in Chicago</div>
             <h1>Where <em>Ideas</em> Meet Over Coffee</h1>
             <p className="hero-description">
               Join Chicago's community of curious minds exploring the intersections of philosophy, politics, and economics. No expertise required—just bring your questions.

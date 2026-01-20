@@ -70,9 +70,7 @@ nav {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(13, 17, 23, 0.8);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
+  background: transparent;
   animation: slideDown 0.8s ease-out;
 }
 
@@ -95,15 +93,16 @@ nav {
 
 .logo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: var(--accent-gold);
+  color: #ffffff;
   letter-spacing: 0.05em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .logo span {
-  color: var(--text-primary);
-  font-weight: 400;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .nav-links {
@@ -113,13 +112,14 @@ nav {
 }
 
 .nav-links a {
-  color: var(--text-secondary);
+  color: #ffffff;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   transition: color 0.3s ease;
   position: relative;
   cursor: pointer;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .nav-links a::after {
@@ -129,12 +129,12 @@ nav {
   left: 0;
   width: 0;
   height: 1px;
-  background: var(--accent-gold);
+  background: #ffffff;
   transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .nav-links a:hover::after {
@@ -147,6 +147,12 @@ nav {
   display: flex;
   align-items: center;
   padding-top: 80px;
+  position: relative;
+  background: 
+    linear-gradient(to bottom, rgba(13, 17, 23, 0.7) 0%, rgba(13, 17, 23, 0.85) 50%, var(--bg-primary) 100%),
+    url('/salon.webp');
+  background-size: cover;
+  background-position: center top;
 }
 
 .hero-content {
