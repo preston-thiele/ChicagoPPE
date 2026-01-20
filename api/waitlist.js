@@ -1,7 +1,31 @@
-import { kv } from '@vercel/kv';
+import { put, list } from "@vercel/blob";
+
+const WAITLIST_FILENAME = 'waitlist.json';
+
+async function getWaitlist() {
+  try {
+    const { blobs } = await list({ prefix: WAITLIST_FILENAME });
+    
+    if (blobs.length === 0) {
+      return [];
+    }
+    
+    const response = await fetch(blobs[0].url);
+    return await response.json();
+  } catch (error) {
+    console.error('Error reading waitlist:', error);
+    return [];
+  }
+}
+
+async function saveWaitlist(data) {
+  await put(WAITLIST_FILENAME, JSON.stringify(data, null, 2), {
+    access: 'public',
+    addRandomSuffix: false,
+  });
+}
 
 export default async function handler(req, res) {
-  // Handle CORS for the API
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -10,31 +34,30 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // POST - Add new signup
   if (req.method === 'POST') {
     try {
       const { firstName, lastName, email, interest, background } = req.body;
 
-      // Validate required fields
       if (!firstName || !lastName || !email) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
-      // Create signup entry
-      const signup = {
+      const waitlist = await getWaitlist();
+      
+      if (waitlist.some(entry => entry.email === email)) {
+        return res.status(200).json({ success: true, message: 'Already on waitlist' });
+      }
+
+      waitlist.push({
         firstName,
         lastName,
         email,
         interest: interest || '',
         background: background || '',
         timestamp: new Date().toISOString()
-      };
+      });
 
-      // Store in Vercel KV (using email as a simple dedup key)
-      await kv.hset(`waitlist:${email}`, signup);
-      
-      // Also add to a list for easy retrieval of all signups
-      await kv.lpush('waitlist:all', JSON.stringify(signup));
+      await saveWaitlist(waitlist);
 
       return res.status(200).json({ success: true, message: 'Added to waitlist' });
     } catch (error) {
@@ -43,12 +66,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // GET - Retrieve all signups (you might want to protect this in production)
   if (req.method === 'GET') {
     try {
-      const signups = await kv.lrange('waitlist:all', 0, -1);
-      const parsed = signups.map(s => typeof s === 'string' ? JSON.parse(s) : s);
-      return res.status(200).json({ signups: parsed, count: parsed.length });
+      const waitlist = await getWaitlist();
+      return res.status(200).json({ signups: waitlist, count: waitlist.length });
     } catch (error) {
       console.error('Fetch error:', error);
       return res.status(500).json({ error: 'Failed to fetch waitlist' });
